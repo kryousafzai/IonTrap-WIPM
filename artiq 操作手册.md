@@ -117,7 +117,7 @@ self.set_dataset("NUM1", 5, broadcast=True)
        self.ttl1.pulse(5*ms)
    ```
 
-   额外的示例可以见` C:\Users\QC\Desktop\artiq-master\三种完美示例\ttl_test.py` 文件。经测试这个文件可以完美运行。其他示例也可以见artiq官网的示例。
+   额外的示例可以见` 三种完美示例\ttl_test.py` 文件。经测试这个文件可以完美运行。其他示例也可以见artiq官网的示例。
 
 2. 需要格外注意的是，在控制TTL的时候，一定要格外注意我们控制的TTL接口究竟是输出接口还是输入接口。假如是输入接口，我们就不能通过代码控制这个TTL接口的输出，转而只能做TTL输入信号的分析。
 
@@ -147,7 +147,7 @@ self.set_dataset("NUM1", 5, broadcast=True)
    count = self.ttl4.count()
    ```
 
-   额外的示例可以见 `C:\Users\QC\Desktop\artiq-master\三种完美示例\photon_detection_text_new.py` 文件，经测试这个文件可以完美运行。
+   额外的示例可以见 `三种完美示例\photon_detection_text_new.py` 文件，经测试这个文件可以完美运行。
 
 ### DDS 输出
 
@@ -172,7 +172,7 @@ self.set_dataset("NUM1", 5, broadcast=True)
    ```python
    self.urukul1_ch0.set(1000*kHz)
    ```
-   额外示例可以见` C:\Users\QC\Desktop\artiq-master\三种完美示例\dds_text_new.py` 文件，经测试这个文件可以完美运行。
+   额外示例可以见` 三种完美示例\dds_text_new.py` 文件，经测试这个文件可以完美运行。
 
 ### 脉冲塑性
 
@@ -194,7 +194,7 @@ self.set_dataset("NUM1", 5, broadcast=True)
 
 2. 在进行脉冲塑性的操作的时候，我们要尤其注意的可能有时间溢出类型的报错。因为调整dds功率的函数执行需要时间，所以我们脉冲塑性设置的步长不能太小。太小的话会报错。
 
-3. 扩展示例见` C:\Users\QC\Desktop\artiq-master\repository 中的 paulse_shaping.py`
+3. 扩展示例见` repository 中的 paulse_shaping.py`
 
 
 
