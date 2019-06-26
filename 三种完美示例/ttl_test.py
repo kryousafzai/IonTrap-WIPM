@@ -8,9 +8,13 @@ class LED(EnvExperiment):
 
     @kernel
     def run(self):
-        self.core.reset()
-        self.ttl4.output()
-        self.ttl4.on()
-        delay(3*ms)
-        self.ttl4.off()
-        delay(3*ms)
+        try:    
+            self.core.reset()
+            self.ttl4.output()
+            self.ttl4.on()
+            delay(3*ms)
+            self.ttl4.off()
+            delay(3*ms)
+        
+        except RTIOUnderflow:
+            print("Error for time")
