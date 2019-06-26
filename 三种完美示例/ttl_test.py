@@ -11,3 +11,6 @@ class LED(EnvExperiment):
         self.core.reset()
         self.ttl4.output()
         self.ttl4.on()
+        delay(3*ms)
+        self.ttl4.off()
+        delay(3*ms)
