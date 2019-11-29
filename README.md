@@ -1,10 +1,15 @@
 # Control System for Quantum Information Process in Ion Traps
 
-Based on ARTIQ. Copyright belongs to WIPM MangFeng's Ion Trap Group
+Updated in 29/11/2019, This project can realize rabi scan and zeeman scan for a single qubit in ion trap. It also contains paulse shaping part and GUI.
 
-Now There are two developer for this project:
+## Copyright:
 
-1. Guanqun Mu -Undergraduate Student in Wuhan University
+Belongs to WIPM MangFeng's Ion Trap Group.
+Homepage link: http://www.wipm.cas.cn/jgsz/yjdw/yzfzwlyjs/shufutixiliangzi/yanjufangxiang/
+
+## Developers:
+
+1. Guanqun Mu -Undergraduate in Wuhan University
 2. GeYi Ding -Master in WIPM
 
-Other information can be found in artiq操作手册.md
+Other detail can be found in artiq操作手册.md
