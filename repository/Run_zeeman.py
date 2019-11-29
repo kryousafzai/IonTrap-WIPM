@@ -90,6 +90,13 @@ class Run_Zeeman(EnvExperiment):
             else:
                 pass
                 
+    def photon_detection(self,Threshould,Signal):
+        for num_e in range(len(Threshould)-1):
+            if Signal>=Threshould[num_e] and Signal<Threshould[num_e+1]:
+                return num_e
+            else:
+                pass
+            
     @kernel
     def DPL_cooling(self):
         ttl1.on()
