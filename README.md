@@ -6,7 +6,7 @@ Updated in 06/12/2019, This project can realize rabi scan and zeeman scan for a 
 
 Belongs to WIPM MangFeng Ion Trap Group.
 
-Homepage link: http://www.wipm.cas.cn/jgsz/yjdw/yzfzwlyjs/shufutixiliangzi/yanjufangxiang/
+Homepage link: http://english.wipm.cas.cn/rh/rd/yzfzsys/bsqip/bsqipr/
 
 ## Developers:
 
