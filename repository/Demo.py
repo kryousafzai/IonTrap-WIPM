@@ -28,7 +28,7 @@ class GUI_Reveal(EnvExperiment,object):
         self.DPL_time=30
         self.SIDE_BAND_time=30
         self.Rabi_time=30
-        DETECTION_time=100
+        self.DETECTION_time=100
         self.delay_time=100
         
     def pepare(self):
@@ -40,14 +40,14 @@ class GUI_Reveal(EnvExperiment,object):
         
             #进程1：执行量子信息操作周期
             with sequential:
-                delay(5*ms)
-                self.QC_Unit(self)
+                delay(500*ms)
+                self.QC_Unit()
             
             #进程2：打开GUI
             delay(5*ms)
             self.GUI_Begin()
     
-    def GUI_Begin(self)
+    def GUI_Begin(self):
         app = QtWidgets.QApplication(sys.argv)
         MainWindow = QtWidgets.QMainWindow()
         self.setupUi(MainWindow)    
@@ -56,50 +56,38 @@ class GUI_Reveal(EnvExperiment,object):
     
     # 将你更改过的量子信息操作周期的代码来替换QC_Unit函数
     @kernel    
-    def QC_Unit:
-        try:
-            while True:
+    def QC_Unit(self):
+        
+        while True:
                 
-                #Dopplor_cooling
-                self.ttl0.on()
-                self.ttl1.on()
-                self.ttl2.on()
-                delay(self.DPL_time*ms)
-                self.ttl0.off()
-                self.ttl1.off()
+            #Dopplor_cooling
+            self.ttl0.on()
+            self.ttl1.on()
+            self.ttl2.on()
+            delay(self.DPL_time*ms)
+            self.ttl0.off()
+            self.ttl1.off()
                 
-                #Side_band_cooling
-                self.ttl3.on()
-                delay(self.SIDE_BAND_time*ms)
-                self.ttl2.off()
-                self.ttl3.off()
+            #Side_band_cooling
+            self.ttl3.on()
+            delay(self.SIDE_BAND_time*ms)
+            self.ttl2.off()
+            self.ttl3.off()
                     
-                #控制Rabi时长
-                self.ttl3.on()
-                delay(self.Rabi_time*us)
-                self.ttl3.off()
+            #控制Rabi时长
+            self.ttl3.on()
+            delay(self.Rabi_time*us)
+            self.ttl3.off()
 
-                #光子计数
-                with parallel:
-                    self.ttl4.gate_rising(self.DETECTION_time*ms)
-                    
-                    with sequential:
-                        self.ttl0.on()
-                        self.ttl1.on()
-                        delay(self.DETECTION_time*ms)
-                        self.ttl0.off()
-                        self.ttl1.off()
-                    
-                #输出光子计数结果
-                self.count_t = self.ttl4.count()
-                self.set_dataset("Count_Num_t", self.count_t, broadcast=True)
-                
-                delay(self.delay_time*ms)
-                
-                
-       #将原先GUI文件中的其余的所有非kernel下的代码复制到这行下面
-       #警告！：禁止粘贴kernel下的代码
-       
+            #光子计数
+            self.ttl0.on()
+            self.ttl1.on()
+            delay(self.DETECTION_time*ms)
+            self.ttl0.off()
+            self.ttl1.off()
+
+    #将原先GUI文件中的其余的所有非kernel下的代码复制到这行下面
+    #警告！：禁止粘贴kernel下的代码
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(400, 300)
