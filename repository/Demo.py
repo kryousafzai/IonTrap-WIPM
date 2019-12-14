@@ -14,7 +14,7 @@ import os
 import sys
 
 class GUI_Reveal(EnvExperiment,object):
-    """GUI Reveal"""
+    """GUI_Parallel_Test"""
     def build(self):
         self.setattr_device("core")
         self.setattr_device("ttl0")
@@ -34,20 +34,25 @@ class GUI_Reveal(EnvExperiment,object):
     def pepare(self):
         pass
     
+    @kernel
     def run(self):     
         with parallel:
         
             #进程1：执行量子信息操作周期
             with sequential:
-                QC_Unit(self)
+                delay(5*ms)
+                self.QC_Unit(self)
             
             #进程2：打开GUI
-            app = QtWidgets.QApplication(sys.argv)
-            MainWindow = QtWidgets.QMainWindow()
-            self.setupUi(MainWindow)    
-            MainWindow.show()
-            sys.exit(app.exec_())
+            delay(5*ms)
+            self.GUI_Begin()
     
+    def GUI_Begin(self)
+        app = QtWidgets.QApplication(sys.argv)
+        MainWindow = QtWidgets.QMainWindow()
+        self.setupUi(MainWindow)    
+        MainWindow.show()
+        sys.exit(app.exec_())
     
     # 将你更改过的量子信息操作周期的代码来替换QC_Unit函数
     @kernel    
@@ -94,3 +99,18 @@ class GUI_Reveal(EnvExperiment,object):
                 
        #将原先GUI文件中的其余的所有非kernel下的代码复制到这行下面
        #警告！：禁止粘贴kernel下的代码
+       
+    def setupUi(self, Form):
+        Form.setObjectName("Form")
+        Form.resize(400, 300)
+        self.pushButton = QtWidgets.QPushButton(Form)
+        self.pushButton.setGeometry(QtCore.QRect(120, 130, 151, 23))
+        self.pushButton.setObjectName("pushButton")
+
+        self.retranslateUi(Form)
+        QtCore.QMetaObject.connectSlotsByName(Form)
+
+    def retranslateUi(self, Form):
+        _translate = QtCore.QCoreApplication.translate
+        Form.setWindowTitle(_translate("Form", "Form"))
+        self.pushButton.setText(_translate("Form", "Hello QC Lab"))
