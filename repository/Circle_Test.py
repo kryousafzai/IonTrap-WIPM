@@ -14,7 +14,7 @@ import os
 import sys
 
 class GUI_Reveal(EnvExperiment,object):
-    """GUI_Parallel_Test"""
+    """Circle_Test"""
     def build(self):
         self.setattr_device("core")
         self.setattr_device("ttl0")
@@ -36,11 +36,15 @@ class GUI_Reveal(EnvExperiment,object):
     def pepare(self):
         pass
     
-    @kernel
+    
     def run(self):     
-        
+    
         while True:
-        self.para=self.get_dataset("Para")
+            self.para=self.get_dataset("Para")
+            Circle()
+        
+    def Circle(self):
+        
         delay(3*ms)
         if self.para==1:
                 
