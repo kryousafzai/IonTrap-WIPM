@@ -42,7 +42,8 @@ class GUI_Reveal(EnvExperiment,object):
         while True:
             self.para=self.get_dataset("Para")
             Circle()
-        
+            
+    @kernel
     def Circle(self):
         
         delay(3*ms)
