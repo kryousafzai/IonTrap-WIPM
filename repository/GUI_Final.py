@@ -458,6 +458,13 @@ class GUITest2(EnvExperiment, object):
         self.doubleSpinBox_PMT.valueChanged.connect(self.doubleSpinBox_PMT_ChangeValue)
         self.doubleSpinBox_GAP.valueChanged.connect(self.doubleSpinBox_GAP_ChangeValue)
         
+        #Selection
+        self.radioButton_rabi.toggled.connect(self.on_radio_button_rabi_toggled)
+        self.radioButton_zeeman.toggled.connect(self.on_radio_button_zeeman_toggled)
+        self.radioButton_cust.toggled.connect(self.on_radio_button_cust_toggled)
+        self.radioButton_off.toggled.connect(self.on_radio_button_off_toggled)
+        self.pushButton.clicked.connect(self.Bstart)
+        
         #RABI_BOX
     def doubleSpinBox_rabistart_ChangeValue(self):
         self.set_dataset("Run_Uint.Rabi.Start",self.doubleSpinBox_rabistart.value(), broadcast=True)
@@ -523,7 +530,24 @@ class GUITest2(EnvExperiment, object):
     def doubleSpinBox_GAP_ChangeValue(self):
         self.set_dataset("Run_Uint.Default.GAP",self.doubleSpinBox_GAP.value(), broadcast=True)
         self.GAP=self.doubleSpinBox_GAP.value()
-    
+        
+    def on_radio_button_rabi_toggled(self):
+        if self.radioButton_rabi.isChecked():
+            self.para=1
+    def on_radio_button_zeeman_toggled(self):
+        if self.radioButton_zeeman.isChecked():
+            self.para=2
+    def on_radio_button_cust_toggled(self):
+        if self.radioButton_cust.isChecked():
+            self.para=3
+    def on_radio_button_off_toggled(self):
+        if self.radioButton_off.isChecked():
+            self.para=4
+            
+    def Bstart(self):
+        self.set_dataset("para",self.para, broadcast=True)
+        
+        
     #END------------------------------------------------------------------------------------------------------------------------------------------------------------------
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
