@@ -1,125 +1,127 @@
 from artiq.experiment import *
+
 import numpy as np
 
+
+
 class Run_Rabi(EnvExperiment):
+
     """Run As Rabi"""
+
     def build(self):
-        #输出端
+        
         self.setattr_device("core")
-        self.setattr_device("ttl0")
-        self.setattr_device("ttl1")
-        self.setattr_device("ttl2")
-        self.setattr_device("ttl3")
-        self.setattr_device("urukul1_ch0")
-        #输入端
-        self.setattr_device("ttl4")
+
+        self.setattr_device("ttl4")#397
+
+        self.setattr_device("ttl6")#866
+
+        self.setattr_device("ttl8")#854
+
+        self.setattr_device("ttl10")#729
+        
+        self.setattr_device("ttl1")#计数上升沿
+
+        self.setattr_device("urukul0_ch0")
+        
+        self.setattr_device("urukul0_ch1")
+
+        self.setattr_device("urukul0_ch2")
+        
+        self.setattr_device("urukul0_cpld")
+
+
+
+
+
 
     def prepare(self):
-        self.Rabi_time=self.get_dataset("Run_Unit.RABI.RABI_TIME_start")
-        self.Rabi_time_end=self.get_dataset("Run_Unit.RABI.RABI_TIME_end")
-        self.Rabi_time_step=self.get_dataset("Run_Unit.RABI.RABI_TIME_step")
+        #取出dataset中对应目录的值，赋给全局变量
+
+        self.Rabi_Time=self.get_dataset("Run_Rabi.Rabi_Time_Start")
+
+        self.Rabi_Time_End=self.get_dataset("Run_Rabi.Rabi_Time_End")
+
+        self.Rabi_Time_Step=self.get_dataset("Run_Rabi.Rabi_Time_Step")
+
         self.Round=self.get_dataset("Run_Unit.Round")
-        self.DPL_time=self.get_dataset("Run_Unit.DPL_time")
-        self.SIDE_BAND_time=self.get_dataset("Run_Unit.SIDE_BAND_time")
-        self.DETECTION_time=self.get_dataset("Run_Unit.DETECTION_time")
-        self.delay_time=self.get_dataset("Run_Unit.DELAY_time")
-        self.ZEEMAN_FREQUENCY_final=self.get_dataset("Run_Unit.ZEEMAN.ZEEMAN_FREQUENCY_final")
+
+        self.Detection_Time=self.get_dataset("Run_Unit.Detection_Time")
+
+        self.Delay_Time=self.get_dataset("Run_Unit.Delay_Time")
+
+        self.Preparation_Time=self.get_dataset("Run_Unit.Preparation_Time")
+
+        self.DPL_Time=self.get_dataset("Run_Unit.DPL_Time")
+
+        self.SBL_Time=self.get_dataset("Run_Unit.SBL_Time")
+
+        self.Preparation_Frequency=self.get_dataset("Run_Rabi.Preparation_Frequency")
+
+        self.SBL_Frequency=self.get_dataset("Run_Rabi.SBL_Frequency")
+
+        self.Rabi_Frequency=self.get_dataset("Run_Rabi.Rabi_Frequency")
         
     @kernel
     def run(self):
-        #设置dds的振幅，频率
         self.core.reset()
-        delay(10*ms)
-        self.urukul1_ch0.sw.on()
-        self.urukul1_ch0.set_att(0)
-        delay(10*ms)
-        self.urukul1_ch0.set(self.ZEEMAN_FREQUENCY_final*kHz)
-        delay(10*ms)
-        
-        #开始运行
+        #刷新时间轴防止报错
+        self.urukul0_cpld.init()
+        self.urukul0_ch0.init()
+        self.urukul0_ch1.init()
+        self.urukul0_ch2.init()
+        self.urukul0_ch0.sw.on()
+        self.urukul0_ch1.sw.on()
+        self.urukul0_ch2.sw.on()
+        #打开三个dds
         try:
-            while self.Rabi_time< self.Rabi_time_end:
-                
+            while self.Rabi_Time<self.Rabi_Time_End:
+                #while循环
+                self.set_dataset("Run_Rabi.Rabi_Time",self.Rabi_Time,broadcast=True)
+                total_count=0
+                #总光子数开始时为0
                 for i in range(self.Round):
-                    
-                    #Dopplor_cooling
-                    self.ttl0.on()
-                    self.ttl1.on()
-                    self.ttl2.on()
-                    delay(self.DPL_time*ms)
-                    self.ttl0.off()
-                    self.ttl1.off()
-                    
-                    #Side_band_cooling
-                    self.ttl3.on()
-                    delay(self.SIDE_BAND_time*ms)
-                    self.ttl2.off()
-                    self.ttl3.off()
-                    
-                    #控制Rabi时长
-                    self.ttl3.on()
-                    delay(self.Rabi_time*us)
-                    self.ttl3.off()
-
-                    #光子计数
-                    with parallel:
-                        self.ttl4.gate_rising(self.DETECTION_time*ms)
-                        
+                    #多普勒冷却
+                    self.ttl4.on()#打开397
+                    self.ttl6.on()#打开866
+                    self.ttl8.on()#打开854
+                    delay(self.DPL_Time*ms)#持续设置的多普勒冷却时长
+                    #态制备
+                    self.ttl4.off()#关闭397
+                    self.ttl10.on()#打开729
+                    self.urukul0_ch0.set(self.Preparation_Frequency*MHz)#设置态制备729频率
+                    delay(self.Preparation_Time*us)#持续态制备时长
+                    #边带冷却
+                    self.urukul0_ch1.set(self.SBL_Frequency*MHz)#设置边带冷却频率
+                    delay(self.SBL_Time*ms)#持续边带冷却时长
+                    #Rabi扫描
+                    self.urukul0_ch2.set(self.Rabi_Frequency)#设置扫Rabi频率
+                    self.ttl8.off()#关闭854
+                    delay(self.Rabi_Time*ns)#持续Rabi时长
+                    self.ttl10.off()#关闭729
+                    #态探测
+                    with parallel:#同时进行
+                        gate_end_mu = self.ttl1.gate_rising(self.Detection_Time*ms)
+                        #记录上升沿
                         with sequential:
-                            self.ttl0.on()
-                            self.ttl1.on()
-                            delay(self.DETECTION_time*ms)
-                            self.ttl0.off()
-                            self.ttl1.off()
-                    
-                    #输出光子计数结果
-                    self.count_t = self.ttl4.count()
-                    self.set_dataset("Count_Num_t", self.count_t, broadcast=True)
-                    
-                    delay(self.delay_time*ms)
-                    
-                self.Rabi_time+=self.Rabi_step
-                delay(self.delay_time*ms)
-                
+                            self.ttl4.on()#打开397
+                            delay(self.Detection_Time*ms)#持续探测时长
+                            self.ttl6.off()#关闭866
+                            self.ttl4.off()#关闭397
+
+                    num_rising_edges =self.ttl1.count(gate_end_mu)
+                    #上升沿计数
+                    self.set_dataset("photon.count", num_rising_edges, broadcast=True)
+                    #将上升沿数量显示在dataset中    
+                    delay(self.Delay_Time*ms)
+                    #持续空转时间
+                    total_count+=num_rising_edges
+                    #光子计数叠加
+                self.set_dataset("photon.count_total", total_count, broadcast=True)
+                #将self.Round次内的总光子计数显示在dataset中
+                self.Rabi_Time+=self.Rabi_Time_Step
+                #Rabi时长按给定步长增加
+                   
         except RTIOUnderflow:
+            #时间溢出报错时会打印"Error for time"
             print("Error for time")
-    
-    
-    def photon_detection(self,Threshould,Signal):
-        for num_e in range(len(Threshould)-1):
-            if Signal>=Threshould[num_e] and Signal<Threshould[num_e+1]:
-                return num_e
-            else:
-                pass
-            
-    @kernel
-    def DPL_cooling(self):
-        ttl1.on()
-        ttl2.on()
-        ttl3.on()
-        
-        pause(self.DPL_time*ms)
-        
-        ttl1.off()
-        ttl2.off()
-        ttl3.off()
-        
-    @kernel
-    def SIDE_BAND_cooling(self):
-        ttl3.on()
-        ttl4.on()
-        
-        pause(self.SIDE_BAND_time*ms)
-        
-        ttl3.off()
-        ttl4.off()
-        
-    @kernel
-    def PHOTON_detection(self):
-        ttl1.on()
-        ttl3.on()
-        
-        pause(self.DETECTION_time*ms)
-        
-        ttl1.off()
-        ttl3.off()
