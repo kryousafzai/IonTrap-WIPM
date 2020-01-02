@@ -13,4 +13,8 @@ Homepage link: http://english.wipm.cas.cn/rh/rd/yzfzsys/bsqip/bsqipr/
 1. Guanqun Mu     -Undergraduate in Wuhan University
 2. GeYi Ding     -Master in WIPM
 
-Other detail can be found in artiq操作手册.md
+## How to Start:
+
+If you are a User in English, go to ' Manual for Users.md ' 
+
+Other detail in Chinese can be found in artiq操作手册.md
