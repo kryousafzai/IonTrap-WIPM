@@ -1,6 +1,6 @@
 # Control System for Quantum Information Process in Ion Traps
 
-Updated in 02/01/2020, This project can realize rabi scan and zeeman scan for a single qubit in ion trap. It also contains paulse shaping part and GUI.
+Updated in 03/01/2020, This project can realize rabi scan and zeeman scan for a single qubit in ion trap. It also contains paulse shaping part and GUI.
 
 ## 1. Introduction
 
@@ -16,7 +16,10 @@ Homepage link: http://english.wipm.cas.cn/rh/rd/yzfzsys/bsqip/bsqipr/
 2. GeYi Ding     -Master in WIPM
 
 If you want to be a developer, please contact Guanqun Mu: **guanqun_mu@whu.edu.cn**
+
 And go to ' Manual for Developers.md ' for more details.
+
+
 
 
 ## 2. Manual for Users
